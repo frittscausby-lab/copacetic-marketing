@@ -1155,3 +1155,9 @@ nav a { font-size: 0.78rem; }
   .dd::after { display: none; }
   .svc-media { grid-template-columns: 1fr; gap: 1rem; padding: 1.5rem 0; }
 }
+
+/* home brand line with definition */
+.intro .brand-name { font-family: 'DM Sans', sans-serif; font-size: 1.15rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--text); margin: 0 0 0.3rem; }
+.intro .brand-def { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.05rem; color: var(--gold); margin: 0 0 1.4rem; }
+.intro .brand-def em { font-style: italic; }

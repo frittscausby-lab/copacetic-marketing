@@ -237,7 +237,8 @@ HOME_TOP = f'''<div class="mini-hero">
 
 HOME = '''
 <div class="intro">
-  <p class="eyebrow">Copacetic Marketing</p>
+  <p class="brand-name">Copacetic Marketing</p>
+  <p class="brand-def"><em>co&middot;pa&middot;cet&middot;ic</em> (adj.): excellent; in fine order</p>
   <h1>Content writing and ghostwriting for <em>busy professionals.</em></h1>
   <p class="lede">Marketing is the engine that runs a business, and content is the fuel that drives it forward. Copacetic makes it excellent for clients by serving as a one-stop shop for content development, management and distribution.</p>
   <div class="actions"><a class="btn-primary" href="@MAIL@">Contact &rarr;</a><a class="btn-ghost" href="@services@">View services</a></div>

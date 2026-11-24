@@ -238,8 +238,8 @@ HOME_TOP = f'''<div class="mini-hero">
 HOME = '''
 <div class="intro">
   <p class="eyebrow">Copacetic Marketing</p>
-  <h1>Press releases and ghostwriting for <em>busy professionals.</em></h1>
-  <p class="lede">Most organizations have news worth sharing and little time to share it. I handle the writing and the outreach to the publications that cover their industries.</p>
+  <h1>Content writing and ghostwriting for <em>busy professionals.</em></h1>
+  <p class="lede">Marketing is the engine that runs a business, and content is the fuel that drives it forward. Copacetic makes it excellent for clients by serving as a one-stop shop for content development, management and distribution.</p>
   <div class="actions"><a class="btn-primary" href="@MAIL@">Contact &rarr;</a><a class="btn-ghost" href="@services@">View services</a></div>
 </div>
 

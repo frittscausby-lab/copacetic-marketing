@@ -3,7 +3,7 @@
 python3 build.py          -> dist/     (deploy build, clean addresses, for GitHub Pages)
 python3 build.py preview  -> preview/  (links point at index.html so pages open anywhere)
 """
-import json, os, re, shutil, sys, html
+import json, os, re, shutil, sys, html, hashlib
 
 PREVIEW = len(sys.argv) > 1 and sys.argv[1] == "preview"
 OUT = "preview" if PREVIEW else "dist"
@@ -13,6 +13,7 @@ CONTACT_URL = "https://www.frittscausby.com/contact"   # used when no address is
 FC = "https://www.frittscausby.com"
 PIN = "https://thepinnacle.ink/articles"
 
+CSS_V = hashlib.md5(open("assets/style.css", "rb").read()).hexdigest()[:8]
 PAGES = {"home": "", "services": "services-1", "press": "press-release-services", "ghost": "ghostwriting",
          "c2c": "conference-to-content", "about": "about", "blog": "blog"}
 # Services menu: items with their own page link to it; the rest are listed without a link for now
@@ -147,7 +148,7 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{up}assets/style.css">
+  <link rel="stylesheet" href="{up}assets/style.css?v={CSS_V}">
   <script type="application/ld+json">{json.dumps(ld)}</script>
 </head>
 <body>

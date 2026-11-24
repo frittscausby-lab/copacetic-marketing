@@ -1101,3 +1101,57 @@ a.svc:hover h3 { color: var(--gold); }
 .article-header { padding: 3.25rem 0 2.5rem; }
 .article-header-inner { max-width: 1400px; padding: 0 2rem; }
 .article-header h1, .article-header .subtitle, .article-byline { max-width: 860px; }
+
+/* ---------- Services dropdown ---------- */
+.dd { position: relative; }
+.dd-top { display: inline-flex; align-items: center; gap: 0.35rem; }
+.dd .caret { font-size: 0.65em; }
+.dd-menu { list-style: none; margin: 0; padding: 0.6rem 0; position: absolute; top: 100%; left: -1rem; min-width: 290px;
+  background: #fff; border: 1px solid var(--border); border-top: 3px solid var(--gold); box-shadow: 0 14px 30px rgba(46,55,66,0.12);
+  opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .15s, transform .15s, visibility .15s; z-index: 200; }
+.dd:hover .dd-menu, .dd:focus-within .dd-menu { opacity: 1; visibility: visible; transform: none; }
+.dd::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 14px; }
+.dd-menu li a, .dd-menu li span { display: block; padding: 0.5rem 1.2rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+  letter-spacing: 0.02em; text-transform: none; }
+.dd-menu li a { color: var(--text); font-weight: 600; }
+.dd-menu li a:hover, .dd-menu li a[aria-current="page"] { color: var(--gold); background: var(--cream); }
+.dd-menu li span { color: var(--text-secondary); cursor: default; }
+nav .dd-menu a[aria-current="page"] { border-bottom: 0; padding-bottom: 0.5rem; }
+.side-services li span { display: block; padding: 0.6rem 0; color: #a9b1bb; font-size: 0.92rem; }
+
+/* ---------- Home services with photos ---------- */
+.svc-media-list { border-top: 1px solid var(--border-dark); margin-bottom: 1.5rem; }
+.svc-media { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--border); align-items: start; }
+.svc-media figure { margin: 0 !important; }
+.svc-media img { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; display: block; }
+.svc-media h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: 1.5rem; line-height: 1.2; margin: 0 0 0.7rem; }
+.article-body .svc-media h3 a { color: var(--text); text-decoration: none; }
+.article-body .svc-media h3 a:hover { color: var(--gold); }
+.svc-media p { margin-bottom: 0.8rem; }
+
+/* ---------- Larger type and wider layout (same approach as frittscausby.com) ---------- */
+html { font-size: 18px; }
+body { font-size: 1rem; }
+.content-with-sidebar { max-width: 1480px; grid-template-columns: minmax(0, 1fr) 340px; gap: 3.5rem; }
+.page-body { max-width: none; }
+.header-inner, .mini-hero-inner { max-width: 1480px; }
+.article-header-inner { max-width: 1480px; }
+.article-header h1, .article-header .subtitle, .article-byline { max-width: 1000px; }
+.footer-inner { max-width: 1480px; }
+nav a { font-size: 0.78rem; }
+@media (min-width: 1400px) { html { font-size: 19px; } }
+@media (min-width: 1800px) { html { font-size: 20.5px; }
+  .content-with-sidebar, .header-inner, .mini-hero-inner, .article-header-inner, .footer-inner { max-width: 1720px; }
+  .content-with-sidebar { grid-template-columns: minmax(0, 1fr) 380px; } }
+@media (min-width: 2300px) { html { font-size: 22.5px; }
+  .content-with-sidebar, .header-inner, .mini-hero-inner, .article-header-inner, .footer-inner { max-width: 2000px; }
+  .content-with-sidebar { grid-template-columns: minmax(0, 1fr) 420px; } }
+
+@media (max-width: 960px) {
+  .dd { width: 100%; }
+  .dd-menu { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 0; border-left: 2px solid var(--gold);
+    background: transparent; min-width: 0; padding: 0.2rem 0 0.4rem; margin: 0.2rem 0 0.4rem; }
+  .dd-menu li a, .dd-menu li span { padding: 0.35rem 0.9rem; }
+  .dd::after { display: none; }
+  .svc-media { grid-template-columns: 1fr; gap: 1rem; padding: 1.5rem 0; }
+}

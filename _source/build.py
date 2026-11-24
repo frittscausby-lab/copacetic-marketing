@@ -15,11 +15,11 @@ PIN = "https://thepinnacle.ink/articles"
 
 PAGES = {"home": "", "services": "services-1", "press": "press-release-services", "ghost": "ghostwriting",
          "c2c": "conference-to-content", "about": "about", "blog": "blog"}
-NAV = [("services", "Services"), ("press", "Press Releases"), ("ghost", "Ghostwriting"),
-       ("c2c", "Conference to Content"), ("about", "About"), ("blog", "Blog")]
-SIDE_SERVICES = [("press", "", "Press releases and media outreach"), ("ghost", "", "Ghostwriting and thought leadership"),
-                 ("services", "#real-estate", "Real estate and luxury property writing"), ("c2c", "", "Conference to Content"),
-                 ("services", "#newsletters", "Newsletters and distribution"), ("services", "#websites", "Websites")]
+# Services menu: items with their own page link to it; the rest are listed without a link for now
+MENU = [("press", "Press Releases"), ("ghost", "Ghostwriting"), ("c2c", "Conference to Content"),
+        (None, "Real Estate and Listing Writing"), (None, "Sponsored Content"), (None, "Newsletters"),
+        (None, "Video Scripts"), (None, "Reputation Management"), (None, "Website Building")]
+NAV = [("about", "About"), ("blog", "Blog")]
 
 
 def depth(p):
@@ -53,6 +53,9 @@ IMG = {
     "q22": ("photo-1758599668429-121d54188b9c", "Vitaly Gariev", "silverkblack", "Volunteers caring for a community park"),
     "arch": ("photo-1766603636700-e9d80473f40f", "Alef Morais", "alef_visuals", "Modern house with large windows and a green lawn"),
     "c2c": ("photo-1505373877841-8d25f7d46678", "Teemu Paananen", "xteemu", "Presenter in front of a large screen at a conference"),
+    "press": ("photo-1504711434969-e33886168f5c", "AbsolutVision", "codzilla_swiss", "Business pages of a newspaper"),
+    "news": ("photo-1773158742082-6f26389f7492", "Viva Reella", "vivareella", "Phone, laptop and coffee on a desk"),
+    "web": ("photo-1522542550221-31fd19575a2d", "Hal Gatewood", "halacious", "Sketches of website layouts"),
 }
 UTM = "utm_source=copacetic_marketing&utm_medium=referral"
 
@@ -87,10 +90,14 @@ def header_block(tag, h1, subtitle):
             f'<h1>{h1}</h1>{sub}</div></div>')
 
 
+def menu_items(key, here):
+    return "".join(
+        (f'<li><a href="{link(k, here)}"{" aria-current=page" if k == key else ""}>{label}</a></li>' if k
+         else f'<li><span>{label}</span></li>') for k, label in MENU)
+
+
 def sidebar(key, here):
-    items = "".join(
-        f'<li><a href="{link(k, here)}{anchor}"{" aria-current=page" if (k == key and not anchor) else ""}>{label}</a></li>'
-        for k, anchor, label in SIDE_SERVICES)
+    items = menu_items(key, here)
     return f'''<aside class="sidebar">
     <div class="sidebar-subscribe"><span class="sidebar-subscribe-label">Services</span><h4>Copacetic Marketing</h4>
       <p>Press releases, ghostwriting and marketing content for businesses nationwide.</p>
@@ -106,7 +113,10 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
     here = PAGES[key] if here is None else here
     up = "../" * depth(here)
     canonical = f"{DOMAIN}/{here + '/' if here else ''}"
-    nav = "".join(f'<a href="{link(k, here)}"{" aria-current=page" if k == key else ""}>{lab}</a>' for k, lab in NAV)
+    on_svc = key in ("services", "press", "ghost", "c2c")
+    nav = (f'<div class="dd"><a href="{link("services", here)}" class="dd-top"{" aria-current=page" if on_svc else ""} aria-haspopup="true">Services <span class="caret" aria-hidden="true">&#9662;</span></a>'
+           f'<ul class="dd-menu">{menu_items(key, here)}</ul></div>' +
+           "".join(f'<a href="{link(k, here)}"{" aria-current=page" if k == key else ""}>{lab}</a>' for k, lab in NAV))
     main = main.replace("@CONTACT@", contact_inline()).replace("@MAIL@", mail())
     for k in PAGES:
         main = main.replace(f"@{k}@", link(k, here))
@@ -117,7 +127,7 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
                     "url": DOMAIN + "/", "areaServed": "US",
                     "founder": {"@type": "Person", "name": "Fritts Causby", "url": FC},
                     "description": "Press releases, media outreach, ghostwriting and marketing content."}
-    svc_links = "".join(f'<a href="{link(k, here)}{a}">{lab}</a>' for k, a, lab in SIDE_SERVICES[:4])
+    svc_links = f'<a href="{link("services", here)}">All services</a>' + "".join(f'<a href="{link(k, here)}">{lab}</a>' for k, lab in MENU if k)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -186,6 +196,30 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
 """
 
 
+HOME_SVC = [
+    ("press", "press", "Press releases and media outreach", "An event, a new hire, a service expansion or a fundraiser is an opportunity to seek coverage with a professionally written press release. The service includes a targeted list of local and trade reporters, personal pitch emails and a report on the coverage that follows. The client approves one document and I handle the list, pitches and follow-up."),
+    ("ghost", "q20", "Ghostwriting for attorneys", "Blog posts, client alerts and bylined articles with insights and guidance from the perspective of the attorney, written from a short interview and reviewed by the attorney before publishing. Each piece is customized to the voice of the firm and the attorney. The content draws from my experience writing legal content since 2021."),
+    ("ghost", "q10", "Ghostwriting for real estate professionals", "Market updates, newsletters, agent bios, LinkedIn posts and area guides built on the insights and knowledge of the agent, leveraging the experience of a writer who has worked in real estate since 2005 in sales, marketing, administration and copywriting. Clients and prospects hear from the agent on a regular schedule, even in the busiest months."),
+    ("c2c", "c2c", "Conference to Content", "The effort and planning that go into a conference are significant, so why should the content evaporate when the conference ends? I attend the client event, panel or conference in person, record the sessions for accuracy and write the articles, posts and summary pieces. A single conference can supply months of articles and posts."),
+    (None, "arch", "Architectural property narratives and listing descriptions", "Architectural narratives, listing descriptions, property stories and community lifestyle pages for neighborhoods and developments. The story behind a home is often what earns coverage from media outlets, and a written narrative that honors the architecture keeps the agent&rsquo;s name tied to the property long after it sells."),
+    (None, "news", "Newsletter distribution and management", "A newsletter is a cost-effective means of connecting with customers. This service covers the writing, formatting, scheduling and distribution of newsletters on a regular cadence, with list management and basic reporting, on the platform the client prefers, including Mailchimp, Constant Contact and Beehiiv."),
+    (None, "web", "Website creation and management", "Focused, straightforward websites for small businesses and professionals: a few clearly written pages that load quickly, explain the business and make contact easy. The writing is included, and each site can carry a news section that collects the press releases and articles produced together."),
+]
+
+
+def home_services(here):
+    out = []
+    for k, img, title, text in HOME_SVC:
+        pid, name, user, alt = IMG[img]
+        h = f'<a href="{link(k, here)}">{title}</a>' if k else title
+        more = f'<p><a class="more" href="{link(k, here)}">Learn more</a></p>' if k else ""
+        out.append(f'''<div class="svc-media">
+  <figure><img src="{img_url(img, 900, 600)}" alt="{alt}" width="900" height="600" loading="lazy"><figcaption>Photo by <a href="https://unsplash.com/@{user}?{UTM}">{name}</a> on <a href="https://unsplash.com/?{UTM}">Unsplash</a></figcaption></figure>
+  <div><h3>{h}</h3><p>{text}</p>{more}</div>
+</div>''')
+    return '<div class="svc-media-list">' + "".join(out) + "</div>"
+
+
 def clip(mark, pub, meta, url):
     return (f'<a class="clip" href="{url}"><span class="mark">{mark}</span>'
             f'<span><span class="pub">{pub}</span><br><span class="meta">{meta}</span></span>'
@@ -209,18 +243,8 @@ HOME = '''
 </div>
 
 <h2>Services</h2>
-<div class="svc-list">
-  <a class="svc" href="@press@"><div><span class="num">01</span><h3>Press releases and media outreach</h3></div>
-    <p>I write a press release that is tailored to the business, build a targeted list of reporters, send personal pitches and report on the results. The client approves one document and I handle the list, pitches and follow-up.</p></a>
-  <a class="svc" href="@ghost@"><div><span class="num">02</span><h3>Ghostwriting and thought leadership</h3></div>
-    <p>Articles, blog posts, newsletters and specialized content for LinkedIn from the perspective of the client, developed from a short interview, an email, a slideshow or in-person attendance at a conference or meeting.</p></a>
-  <a class="svc" href="@services@#real-estate"><div><span class="num">03</span><h3>Real estate and luxury property writing</h3></div>
-    <p>Listing descriptions, pitch summaries, agent bios, market updates and community guides from a writer who has served the real estate industry since 2008.</p></a>
-  <a class="svc" href="@c2c@"><div><span class="num">04</span><h3>Conference to Content</h3></div>
-    <p>I attend the event in person, record the sessions and write the articles and posts that follow.</p></a>
-  <a class="svc" href="@services@#newsletters"><div><span class="num">05</span><h3>Newsletters, websites and more</h3></div>
-    <p>Newsletter creation and distribution, website content and basic website management, video scripts and reputation management.</p></a>
-</div>
+@HOMESVC@
+<p><a class="more" href="@services@">All services</a></p>
 
 <h2>About Copacetic Marketing</h2>
 <p>My name is Fritts Causby, and I am the writer behind Copacetic Marketing. Copacetic Marketing is a one-writer firm today, and I bring in designers, writers and editors when it is necessary.</p>
@@ -500,7 +524,7 @@ def write(path, text):
 
 write("", page("home", "Copacetic Marketing | Press Releases, Ghostwriting and Content",
                "Press release writing, media outreach, ghostwriting and marketing content for law firms, real estate professionals and businesses nationwide.",
-               HOME_TOP, HOME.replace("@BLOGCARDS@", cards(POSTS[:4], "")), og_image="arch"))
+               HOME_TOP, HOME.replace("@BLOGCARDS@", cards(POSTS[:4], "")).replace("@HOMESVC@", home_services("")), og_image="arch"))
 for key, title, desc, top, main, og in SPECS:
     write(PAGES[key], page(key, title, desc, top, main, og_image=og))
 

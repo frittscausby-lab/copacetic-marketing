@@ -595,7 +595,7 @@ def sample_body(ps):
 
 
 MONTHLY_TOP = header_block("Monthly content", "A ready-to-send article every month", "For loan officers and real estate agents.")
-MONTHLY = figure("keys", 1600, 700, True) + '''
+MONTHLY = figure("news", 1600, 700, True) + '''
 <p class="lead-in">Most loan officers and real estate agents know they should stay in touch with past clients and prospects, but few have time to write a newsletter every month. The monthly content service delivers one finished article each month, written for borrowers and ready to send under the name of the subscriber.</p>
 <h2>What is included</h2>
 <ul>
@@ -628,7 +628,7 @@ for a in SAMPLES_ALL:
 
 write("monthly-content", page("monthly", "Monthly Newsletter and Blog Articles for Loan Officers and Agents | Copacetic Marketing",
                               "One ready-to-send article each month for the newsletter, blog and LinkedIn of a loan officer or real estate agent, exclusive to one subscriber per city.",
-                              MONTHLY_TOP, MONTHLY, og_image="keys"))
+                              MONTHLY_TOP, MONTHLY, og_image="news"))
 
 for d in INDUSTRIES:
     write(PAGES[d["key"]], page(d["key"], d["title"], d["desc"],

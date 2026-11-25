@@ -18,8 +18,8 @@ CSS_V = hashlib.md5(open("assets/style.css", "rb").read()).hexdigest()[:8]
 PAGES = {"home": "", "services": "services-1", "press": "press-release-services", "ghost": "ghostwriting",
          "c2c": "conference-to-content", "about": "about", "blog": "blog", "industries": "industries"}
 PAGES.update({d["key"]: "industries/" + d["slug"] for d in INDUSTRIES})
-RC_SAMPLES = json.load(open("rc_samples.json"))
-PAGES.update({"smp-" + a["slug"]: "samples/" + a["slug"] for a in RC_SAMPLES})
+SAMPLES_ALL = json.load(open("samples.json"))
+PAGES.update({"smp-" + a["slug"]: "samples/" + a["slug"] for a in SAMPLES_ALL})
 IND_MENU = [(d["key"], d["label"]) for d in INDUSTRIES]
 # Services menu: items with their own page link to it; the rest are listed without a link for now
 MENU = [("press", "Press Releases"), ("ghost", "Ghostwriting"), ("c2c", "Conference to Content"),
@@ -574,14 +574,31 @@ def industry_main(d):
     return "\n".join(out)
 
 
-for a in RC_SAMPLES:
+_IND = {d["key"]: d for d in INDUSTRIES}
+
+
+def sample_body(ps):
+    out, ul = [], []
+    for t in ps:
+        if t.startswith("- "):
+            ul.append(f"<li>{html.escape(t[2:], quote=False)}</li>")
+            continue
+        if ul:
+            out.append("<ul>" + "".join(ul) + "</ul>"); ul = []
+        out.append(f"<p>{html.escape(t, quote=False)}</p>")
+    if ul:
+        out.append("<ul>" + "".join(ul) + "</ul>")
+    return "".join(out)
+
+
+for a in SAMPLES_ALL:
     k = "smp-" + a["slug"]
-    body = "".join(f"<p>{html.escape(t, quote=False)}</p>" for t in a["paras"])
-    body += f'<p class="note">{a["note"]}</p><p><a class="more" href="@ind-retirement@">Press releases and content for retirement communities</a></p>'
+    back = _IND[a["back"]]
+    body = sample_body(a["paras"])
+    body += f'<p class="note">{a["note"]}</p><p><a class="more" href="@{a["back"]}@">{back["h1"]}</a></p>'
     body += cta("To discuss a project", "Share the news, the audience and the timing, and I will reply with a scope and a price.")
-    pg = page(k, f'{a["title"]} | Sample | Copacetic Marketing', "A writing sample for a retirement community.",
-              header_block("Sample", a["title"], ""), body, og_image="seniors")
-    write(PAGES[k], pg)
+    write(PAGES[k], page(k, f'{a["title"]} | Sample | Copacetic Marketing', f'A writing sample: {a["title"]}.',
+                         header_block("Sample", a["title"], ""), body, og_image=a["img"]))
 
 for d in INDUSTRIES:
     write(PAGES[d["key"]], page(d["key"], d["title"], d["desc"],

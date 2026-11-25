@@ -588,7 +588,10 @@ def sample_body(ps):
             continue
         if ul:
             out.append("<ul>" + "".join(ul) + "</ul>"); ul = []
-        out.append(f"<p>{html.escape(t, quote=False)}</p>")
+        if len(t) < 60 and not t.endswith((".", ":", ",")) and not t[0].isdigit():
+            out.append(f"<h3>{html.escape(t, quote=False)}</h3>")
+        else:
+            out.append(f"<p>{html.escape(t, quote=False)}</p>")
     if ul:
         out.append("<ul>" + "".join(ul) + "</ul>")
     return "".join(out)

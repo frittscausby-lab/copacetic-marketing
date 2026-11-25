@@ -599,7 +599,7 @@ def sample_body(ps):
 
 MONTHLY_TOP = header_block("Monthly content", "A ready-to-send article every month", "For loan officers, real estate agents and HVAC companies.")
 MONTHLY = figure("news", 1600, 700, True) + '''
-<p class="lead-in">Most loan officers, real estate agents and HVAC companies know they should stay in touch with past clients and prospects, but few have time to write a newsletter every month. The monthly content service delivers one finished article each month, written for homeowners and ready to send under the name of the subscriber.</p>
+<p class="lead-in">Most loan officers, real estate agents and HVAC companies know they should stay in touch with past clients and prospects, but few have time to write a newsletter every month. The monthly content service delivers one finished article each month, written for clients and ready to send under the name of the subscriber.</p>
 <h2>What is included</h2>
 <ul>
 <li>One article of 600 to 800 words each month. Topics for loan officers and agents include credit, refinancing, buying a first home and the housing market. Topics for HVAC companies include seasonal maintenance, indoor air quality and energy savings.</li>

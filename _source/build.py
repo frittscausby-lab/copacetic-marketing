@@ -562,7 +562,10 @@ if not PREVIEW:
     with open(f"{OUT}/CNAME", "w") as f:
         f.write("copacetic.marketing\n")
     with open(f"{OUT}/robots.txt", "w") as f:
-        f.write(f"User-agent: *\nAllow: /\nSitemap: {DOMAIN}/sitemap.xml\n")
+        bots = ["GPTBot", "ClaudeBot", "anthropic-ai", "CCBot", "Google-Extended", "Applebot-Extended",
+                "Meta-ExternalAgent", "DuckAssistBot", "cohere-ai", "Bytespider"]
+        f.write("".join(f"User-agent: {b}\nDisallow: /\n\n" for b in bots) +
+                f"User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n")
     allp = list(PAGES.values()) + ["blog/" + p["slug"] for p in POSTS]
     urls = "".join(f"  <url><loc>{DOMAIN}/{p + '/' if p else ''}</loc></url>\n" for p in allp)
     with open(f"{OUT}/sitemap.xml", "w") as f:

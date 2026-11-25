@@ -565,7 +565,7 @@ def industry_main(d):
     out.append("<h2>What is included</h2>")
     out += [f"<p>{p}</p>" for p in d["included"]]
     out.append(f'<p><a class="more" href="@{d["service"][0]}@">{d["service"][1]}</a></p>')
-    if d["key"] in ("ind-mortgage", "ind-realestate"):
+    if d["key"] in ("ind-mortgage", "ind-realestate", "ind-hvac"):
         out.append('<p><a class="more" href="@monthly@">Monthly content subscription: one ready-to-send article a month</a></p>')
     out += ["<h2>Rules that apply</h2>", f'<p class="note">{d["rules"]}</p>']
     if d["samples"]:
@@ -597,26 +597,26 @@ def sample_body(ps):
     return "".join(out)
 
 
-MONTHLY_TOP = header_block("Monthly content", "A ready-to-send article every month", "For loan officers and real estate agents.")
+MONTHLY_TOP = header_block("Monthly content", "A ready-to-send article every month", "For loan officers, real estate agents and HVAC companies.")
 MONTHLY = figure("news", 1600, 700, True) + '''
-<p class="lead-in">Most loan officers and real estate agents know they should stay in touch with past clients and prospects, but few have time to write a newsletter every month. The monthly content service delivers one finished article each month, written for borrowers and ready to send under the name of the subscriber.</p>
+<p class="lead-in">Most loan officers, real estate agents and HVAC companies know they should stay in touch with past clients and prospects, but few have time to write a newsletter every month. The monthly content service delivers one finished article each month, written for homeowners and ready to send under the name of the subscriber.</p>
 <h2>What is included</h2>
 <ul>
-<li>One article of 600 to 800 words each month, on topics such as credit, refinancing, buying a first home, renovation loans and the housing market</li>
+<li>One article of 600 to 800 words each month. Topics for loan officers and agents include credit, refinancing, buying a first home and the housing market. Topics for HVAC companies include seasonal maintenance, indoor air quality and energy savings.</li>
 <li>A short version for LinkedIn and Facebook, and a subject line for email</li>
 <li>The name, company and contact details of the subscriber added to each article</li>
 <li>Delivery in the first week of the month as a Word file and as plain text, ready to paste into Mailchimp, Constant Contact or any newsletter platform</li>
 </ul>
 <h2>One subscriber per city</h2>
-<p>Each article is exclusive to one loan officer and one real estate agent in a city, so two competitors never send the same piece to the same neighborhood. Cities are reserved in the order subscribers sign up.</p>
+<p>Each article is exclusive to one subscriber per profession in a city, so two competitors never send the same piece to the same neighborhood. Cities are reserved in the order subscribers sign up.</p>
 <h2>Compliance</h2>
-<p class="note">Articles avoid rate promises and guarantees, and rates and figures are current as of the month of delivery. Each subscriber adds the disclosures that apply, such as an NMLS number or brokerage name, and reviews the article against the policies of the company before sending it. Nothing on this page constitutes legal advice.</p>
+<p class="note">Articles avoid rate promises and guarantees, and rates and figures are current as of the month of delivery. Each subscriber adds the disclosures that apply, such as an NMLS number, brokerage name or contractor license number, and reviews the article against the policies of the company before sending it. Nothing on this page constitutes legal advice.</p>
 <h2>Pricing</h2>
 <div class="price-grid">
   <div class="price-card"><h3>Monthly article</h3><div class="price">$99 per month</div><p>Three-month minimum.</p></div>
   <div class="price-card"><h3>Local market add-on</h3><div class="price">$50 per month</div><p>A custom paragraph on the local market in each article.</p></div>
 </div>
-<p class="sample">For a sense of the style, see <a href="@smp-six-ways-bad-credit-can-ruin-your-life@">Six Ways Bad Credit Can Ruin Your Life</a> and the other samples on the <a href="@ind-mortgage@">mortgage page</a>.</p>
+<p class="sample">For a sense of the style, see <a href="@smp-six-ways-bad-credit-can-ruin-your-life@">Six Ways Bad Credit Can Ruin Your Life</a> for loan officers, and <a href="@smp-save-on-cooling-and-heating-with-zoned-hvac-systems@">Save on Cooling and Heating with Dual Zone HVAC Systems</a> for HVAC companies.</p>
 ''' + cta("Reserve your city", "Send the city and the newsletter platform you use, and I will confirm availability.", "Reserve your city")
 
 
@@ -629,8 +629,8 @@ for a in SAMPLES_ALL:
     write(PAGES[k], page(k, f'{a["title"]} | Sample | Copacetic Marketing', f'A writing sample: {a["title"]}.',
                          header_block("Sample", a["title"], ""), body, og_image=a["img"]))
 
-write("monthly-content", page("monthly", "Monthly Newsletter and Blog Articles for Loan Officers and Agents | Copacetic Marketing",
-                              "One ready-to-send article each month for the newsletter, blog and LinkedIn of a loan officer or real estate agent, exclusive to one subscriber per city.",
+write("monthly-content", page("monthly", "Monthly Newsletter Articles for Loan Officers, Agents and HVAC Companies | Copacetic Marketing",
+                              "One ready-to-send article each month for the newsletter, blog and social media of a loan officer, real estate agent or HVAC company, exclusive to one subscriber per profession in each city.",
                               MONTHLY_TOP, MONTHLY, og_image="news"))
 
 for d in INDUSTRIES:

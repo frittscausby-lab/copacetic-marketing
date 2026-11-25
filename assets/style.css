@@ -1188,3 +1188,11 @@ header .logo-text { font-size: clamp(2.1rem, 3.6vw, 3.4rem); line-height: 1; }
 header .logo-text { font-size: clamp(2.1rem, 3.9vw, 3.8rem); }
 .logo-mark { width: 4.6rem; height: 4.6rem; font-size: 2.7rem; }
 @media (max-width: 960px) { header .logo-text { font-size: 1.9rem; } .logo-mark { width: 3rem; height: 3rem; font-size: 1.8rem; } }
+
+/* tighter spacing at the top of pages and after the home intro */
+.content-with-sidebar { padding-top: 1.75rem; }
+.content-with-sidebar .site-main, .page-body.article-body { padding-top: 0; }
+.sidebar { padding-top: 0; }
+.intro { padding-bottom: 1.6rem; margin-bottom: 1.4rem; }
+.intro + h2 { margin-top: 0; }
+@media (max-width: 960px) { .content-with-sidebar { padding-top: 1.25rem; } }

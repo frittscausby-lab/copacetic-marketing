@@ -146,6 +146,8 @@ INDUSTRIES = [
          related="does-a-legal-writer-need-a-law-degree"),
 ]
 
+INDUSTRIES = [d for d in INDUSTRIES if d['key'] in ('ind-realestate','ind-law')] + [d for d in INDUSTRIES if d['key'] not in ('ind-realestate','ind-law')]
+
 # Supporting articles drafted in the landing pages doc. "land" is the landing page key linked at the end.
 NEW_POSTS = [
     dict(slug="what-to-include-in-a-groundbreaking-or-ribbon-cutting-press-release", key="crane2", land="ind-construction",

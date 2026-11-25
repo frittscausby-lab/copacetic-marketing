@@ -100,7 +100,7 @@ def menu_items(key, here):
 def sidebar(key, here):
     items = menu_items(key, here)
     return f'''<aside class="sidebar">
-    <div class="sidebar-subscribe"><span class="sidebar-subscribe-label">Services</span><h4>Copacetic Marketing</h4>
+    <div class="sidebar-subscribe"><h4>Services</h4>
       <p>Press releases, ghostwriting and marketing content for businesses nationwide.</p>
       <ul class="side-services">{items}</ul>
       <a href="{mail()}" class="btn-primary" style="display:block;text-align:center;">Start a project &rarr;</a></div>
@@ -230,7 +230,7 @@ def clip(mark, pub, meta, url):
 # ---------------------------------------------------------------- HOME
 HOME_TOP = f'''<div class="mini-hero">
   <div class="mini-hero-inner">
-    <p><strong>Copacetic Marketing</strong> provides press releases, sponsored content, newsletters and ghostwritten articles for law firms, real estate professionals and businesses nationwide.</p>
+    <p>Press releases, sponsored content, newsletters and ghostwritten articles for law firms, real estate professionals and businesses nationwide.</p>
     <a href="@services@" class="mini-hero-link">View services &rarr;</a>
   </div>
 </div>'''
@@ -524,7 +524,7 @@ def write(path, text):
         f.write(text)
 
 
-write("", page("home", "Copacetic Marketing | Press Releases, Ghostwriting and Content",
+write("", page("home", "Content Writing and Ghostwriting | Copacetic Marketing",
                "Press release writing, media outreach, ghostwriting and marketing content for law firms, real estate professionals and businesses nationwide.",
                HOME_TOP, HOME.replace("@BLOGCARDS@", cards(POSTS[:4], "")).replace("@HOMESVC@", home_services("")), og_image="arch"))
 for key, title, desc, top, main, og in SPECS:

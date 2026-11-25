@@ -18,6 +18,8 @@ CSS_V = hashlib.md5(open("assets/style.css", "rb").read()).hexdigest()[:8]
 PAGES = {"home": "", "services": "services-1", "press": "press-release-services", "ghost": "ghostwriting",
          "c2c": "conference-to-content", "about": "about", "blog": "blog", "industries": "industries"}
 PAGES.update({d["key"]: "industries/" + d["slug"] for d in INDUSTRIES})
+RC_SAMPLES = json.load(open("rc_samples.json"))
+PAGES.update({"smp-" + a["slug"]: "samples/" + a["slug"] for a in RC_SAMPLES})
 IND_MENU = [(d["key"], d["label"]) for d in INDUSTRIES]
 # Services menu: items with their own page link to it; the rest are listed without a link for now
 MENU = [("press", "Press Releases"), ("ghost", "Ghostwriting"), ("c2c", "Conference to Content"),
@@ -572,6 +574,15 @@ def industry_main(d):
     return "\n".join(out)
 
 
+for a in RC_SAMPLES:
+    k = "smp-" + a["slug"]
+    body = "".join(f"<p>{html.escape(t, quote=False)}</p>" for t in a["paras"])
+    body += f'<p class="note">{a["note"]}</p><p><a class="more" href="@ind-retirement@">Press releases and content for retirement communities</a></p>'
+    body += cta("To discuss a project", "Share the news, the audience and the timing, and I will reply with a scope and a price.")
+    pg = page(k, f'{a["title"]} | Sample | Copacetic Marketing', "A writing sample for a retirement community.",
+              header_block("Sample", a["title"], ""), body, og_image="seniors")
+    write(PAGES[k], pg.replace('<link rel="canonical"', '<meta name="robots" content="noindex">\n  <link rel="canonical"', 1))
+
 for d in INDUSTRIES:
     write(PAGES[d["key"]], page(d["key"], d["title"], d["desc"],
                                 header_block("Industries", d["h1"], ""), industry_main(d), og_image=d["img"]))
@@ -614,7 +625,7 @@ if not PREVIEW:
                 "Meta-ExternalAgent", "DuckAssistBot", "cohere-ai", "Bytespider"]
         f.write("".join(f"User-agent: {b}\nDisallow: /\n\n" for b in bots) +
                 f"User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n")
-    allp = list(PAGES.values()) + ["blog/" + p["slug"] for p in POSTS]
+    allp = [v for k, v in PAGES.items() if not k.startswith("smp-")] + ["blog/" + p["slug"] for p in POSTS]
     urls = "".join(f"  <url><loc>{DOMAIN}/{p + '/' if p else ''}</loc></url>\n" for p in allp)
     with open(f"{OUT}/sitemap.xml", "w") as f:
         f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')

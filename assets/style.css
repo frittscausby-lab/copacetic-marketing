@@ -1161,3 +1161,30 @@ nav a { font-size: 0.78rem; }
   letter-spacing: 0.18em; color: var(--text); margin: 0 0 0.3rem; }
 .intro .brand-def { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.05rem; color: var(--gold); margin: 0 0 1.4rem; }
 .intro .brand-def em { font-style: italic; }
+
+/* large top banner with the definition under the name */
+header { position: static; }
+.header-inner { height: auto; padding-top: 1.6rem; padding-bottom: 1.6rem; }
+.logo { gap: 1.1rem; }
+.logo-mark { width: 4.2rem; height: 4.2rem; font-size: 2.5rem; }
+.logo-words { display: flex; flex-direction: column; gap: 0.45rem; }
+header .logo-text { font-size: clamp(2.1rem, 3.6vw, 3.4rem); line-height: 1; }
+.logo-def { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(0.95rem, 1.3vw, 1.2rem); color: var(--gold); line-height: 1.2; }
+.logo-def em { font-style: italic; }
+.intro h1 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); }
+@media (max-width: 960px) {
+  .header-inner { padding-top: 1rem; padding-bottom: 1rem; }
+  .logo-mark { width: 3rem; height: 3rem; font-size: 1.8rem; }
+  header .logo-text { font-size: 1.9rem; }
+  .logo-def { font-size: 0.85rem; }
+}
+
+/* phones and tablets: single column (overrides the wide-screen grid above) */
+@media (max-width: 960px) {
+  .content-with-sidebar { grid-template-columns: minmax(0, 1fr) !important; gap: 2rem; padding: 2rem 1.25rem; }
+  .header-inner { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .article-header-inner, .mini-hero-inner { padding: 0 1.25rem; }
+}
+header .logo-text { font-size: clamp(2.1rem, 3.9vw, 3.8rem); }
+.logo-mark { width: 4.6rem; height: 4.6rem; font-size: 2.7rem; }
+@media (max-width: 960px) { header .logo-text { font-size: 1.9rem; } .logo-mark { width: 3rem; height: 3rem; font-size: 1.8rem; } }

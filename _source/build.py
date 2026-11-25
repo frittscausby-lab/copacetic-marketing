@@ -154,7 +154,7 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
 <body>
 <header>
   <div class="header-inner">
-    <a href="{link('home', here)}" class="logo"><span class="logo-mark" aria-hidden="true">C</span><span class="logo-text">Copacetic <span>Marketing</span></span></a>
+    <a href="{link('home', here)}" class="logo"><span class="logo-mark" aria-hidden="true">C</span><span class="logo-words"><span class="logo-text">Copacetic <span>Marketing</span></span><span class="logo-def"><em>co&middot;pa&middot;cet&middot;ic</em> (adj.): excellent; in fine order</span></span></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" onclick="var n=document.getElementById('site-nav');var o=n.classList.toggle('open');this.setAttribute('aria-expanded',o)">Menu</button>
     <nav id="site-nav" aria-label="Main">{nav}<a href="{mail()}" class="nav-subscribe">Contact</a></nav>
   </div>
@@ -237,8 +237,6 @@ HOME_TOP = f'''<div class="mini-hero">
 
 HOME = '''
 <div class="intro">
-  <p class="brand-name">Copacetic Marketing</p>
-  <p class="brand-def"><em>co&middot;pa&middot;cet&middot;ic</em> (adj.): excellent; in fine order</p>
   <h1>Content writing and ghostwriting for <em>busy professionals.</em></h1>
   <p class="lede">Marketing is the engine that runs a business, and content is the fuel that drives it forward. Copacetic makes it excellent for clients by serving as a one-stop shop for content development, management and distribution.</p>
   <div class="actions"><a class="btn-primary" href="@MAIL@">Contact &rarr;</a><a class="btn-ghost" href="@services@">View services</a></div>

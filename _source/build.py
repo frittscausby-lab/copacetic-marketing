@@ -238,7 +238,7 @@ HOME_TOP = f'''<div class="mini-hero">
 HOME = '''
 <div class="intro">
   <h1>Content writing and ghostwriting for <em>busy professionals.</em></h1>
-  <p class="lede">Marketing is the engine that runs a business, and content is the fuel that drives it forward. Copacetic makes it excellent for clients by serving as a one-stop shop for content development, management and distribution.</p>
+  <p class="lede">Marketing is the engine that grows a business and content is the fuel. With content development and distribution services, Copacetic Marketing drives business forward.</p>
   <div class="actions"><a class="btn-primary" href="@MAIL@">Contact &rarr;</a><a class="btn-ghost" href="@services@">View services</a></div>
 </div>
 

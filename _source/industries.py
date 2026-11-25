@@ -17,7 +17,7 @@ NEW_IMG = {
     "seniors": ("photo-1625690987114-86f5af994b49", "Hector Reyes", "capture_it", "Older couple walking arm in arm down a road"),
     "crane2": ("photo-1599707254554-027aeb4deacd", "Frames For Your Heart", "framesforyourheart", "Yellow crane beside a building under construction"),
     "dinner": ("photo-1768508950243-16fd93e88d7f", "Filip Rankovic Grobgaard", "filipgrobgaard", "Guests at a formal dinner event"),
-    "keys": ("photo-1741156386380-0236c72eb6f9", "Jakub Żerdzicki", "jakubzerdzicki", "Hand holding house keys at a front door"),
+    "keys": ("photo-1714647212067-2fd0fa63ccf4", "Vitaly Gariev", "silverkblack", "Loan officer reviewing paperwork with a couple"),
     "review": ("photo-1551135049-8a33b5883817", "Sebastian Herrmann", "officestock", "Colleagues reviewing a document at a table"),
 }
 
@@ -88,7 +88,7 @@ INDUSTRIES = [
          events=["Rate and market updates", "New loan programs", "New loan officers and branch openings",
                  "Awards and production rankings", "Homebuyer education events", "Community sponsorships"],
          events_p=["Rate movements and Federal Reserve decisions give borrowers a reason to read a market update, and a new loan program, such as financing for the self-employed or a renovation loan, is worth announcing to past clients and real estate agents. New loan officers, branch openings and awards are valid reasons for a press release. Homebuyer seminars and community sponsorships show the value of the company beyond the closing table."],
-         included=["Blog posts, newsletters, sponsored articles and press releases, each written from a short interview with research and up to four edits. Market commentary is written in plain language for borrowers, and educational pieces on credit, refinancing and buying a first home can be reused on the website, in email and on social media.", OMNI],
+         included=["Available services include blog posts, newsletters, sponsored articles and press releases, each written from a short interview and online research. Up to four edits are provided. Market commentary is written in plain language and educational pieces on credit, refinancing and buying a first home can be reused on a website, in an email and on social media.", OMNI],
          service=("ghost", "Ghostwriting services"),
          rules="Mortgage advertising follows federal rules. Under Regulation Z, a stated interest rate generally must be accompanied by the annual percentage rate, and certain terms, such as a down payment, a monthly payment or the number of payments, trigger additional disclosures. The Mortgage Acts and Practices Advertising Rule prohibits misleading claims about rates, fees and loan terms, and fair lending laws apply to every advertisement. Most states also require the NMLS identification number of the company or loan officer in advertising. Rates and figures are confirmed on the date of publication, and every draft goes to the compliance contact of the company before it runs. Nothing on this page constitutes legal advice.",
          samples=['<a href="@smp-six-ways-bad-credit-can-ruin-your-life@">Six Ways Bad Credit Can Ruin Your Life</a>',

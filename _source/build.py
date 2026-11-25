@@ -16,14 +16,15 @@ PIN = "https://thepinnacle.ink/articles"
 
 CSS_V = hashlib.md5(open("assets/style.css", "rb").read()).hexdigest()[:8]
 PAGES = {"home": "", "services": "services-1", "press": "press-release-services", "ghost": "ghostwriting",
-         "c2c": "conference-to-content", "about": "about", "blog": "blog", "industries": "industries"}
+         "c2c": "conference-to-content", "about": "about", "blog": "blog", "industries": "industries",
+         "monthly": "monthly-content"}
 PAGES.update({d["key"]: "industries/" + d["slug"] for d in INDUSTRIES})
 SAMPLES_ALL = json.load(open("samples.json"))
 PAGES.update({"smp-" + a["slug"]: "samples/" + a["slug"] for a in SAMPLES_ALL})
 IND_MENU = [(d["key"], d["label"]) for d in INDUSTRIES]
 # Services menu: items with their own page link to it; the rest are listed without a link for now
 MENU = [("press", "Press Releases"), ("ghost", "Ghostwriting"), ("c2c", "Conference to Content"),
-        ("ind-realestate", "Real Estate and Listing Writing"), (None, "Sponsored Content"), (None, "Newsletters"),
+        ("ind-realestate", "Real Estate and Listing Writing"), (None, "Sponsored Content"), (None, "Newsletters"), ("monthly", "Monthly Content Subscription"),
         (None, "Video Scripts"), (None, "Reputation Management"), (None, "Website Building")]
 NAV = [("about", "About"), ("blog", "Blog")]
 
@@ -120,7 +121,7 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
     here = PAGES[key] if here is None else here
     up = "../" * depth(here)
     canonical = f"{DOMAIN}/{here + '/' if here else ''}"
-    on_svc = key in ("services", "press", "ghost", "c2c")
+    on_svc = key in ("services", "press", "ghost", "c2c", "monthly")
     nav = (f'<div class="dd"><a href="{link("services", here)}" class="dd-top"{" aria-current=page" if on_svc else ""} aria-haspopup="true">Services <span class="caret" aria-hidden="true">&#9662;</span></a>'
            f'<ul class="dd-menu">{menu_items(key, here)}</ul></div>' +
            f'<div class="dd"><a href="{link("industries", here)}" class="dd-top"{" aria-current=page" if key.startswith("ind") else ""} aria-haspopup="true">Industries <span class="caret" aria-hidden="true">&#9662;</span></a>'
@@ -564,6 +565,8 @@ def industry_main(d):
     out.append("<h2>What is included</h2>")
     out += [f"<p>{p}</p>" for p in d["included"]]
     out.append(f'<p><a class="more" href="@{d["service"][0]}@">{d["service"][1]}</a></p>')
+    if d["key"] in ("ind-mortgage", "ind-realestate"):
+        out.append('<p><a class="more" href="@monthly@">Monthly content subscription: one ready-to-send article a month</a></p>')
     out += ["<h2>Rules that apply</h2>", f'<p class="note">{d["rules"]}</p>']
     if d["samples"]:
         out.append("<h2>Samples</h2>")
@@ -591,6 +594,29 @@ def sample_body(ps):
     return "".join(out)
 
 
+MONTHLY_TOP = header_block("Monthly content", "A ready-to-send article every month", "For loan officers and real estate agents.")
+MONTHLY = figure("keys", 1600, 700, True) + '''
+<p class="lead-in">Most loan officers and real estate agents know they should stay in touch with past clients and prospects, but few have time to write a newsletter every month. The monthly content service delivers one finished article each month, written for borrowers and ready to send under the name of the subscriber.</p>
+<h2>What is included</h2>
+<ul>
+<li>One article of 600 to 800 words each month, on topics such as credit, refinancing, buying a first home, renovation loans and the housing market</li>
+<li>A short version for LinkedIn and Facebook, and a subject line for email</li>
+<li>The name, company and contact details of the subscriber added to each article</li>
+<li>Delivery in the first week of the month as a Word file and as plain text, ready to paste into Mailchimp, Constant Contact or any newsletter platform</li>
+</ul>
+<h2>One subscriber per city</h2>
+<p>Each article is exclusive to one loan officer and one real estate agent in a city, so two competitors never send the same piece to the same neighborhood. Cities are reserved in the order subscribers sign up.</p>
+<h2>Compliance</h2>
+<p class="note">Articles avoid rate promises and guarantees, and rates and figures are current as of the month of delivery. Each subscriber adds the disclosures that apply, such as an NMLS number or brokerage name, and reviews the article against the policies of the company before sending it. Nothing on this page constitutes legal advice.</p>
+<h2>Pricing</h2>
+<div class="price-grid">
+  <div class="price-card"><h3>Monthly article</h3><div class="price">$99 per month</div><p>Three-month minimum.</p></div>
+  <div class="price-card"><h3>Local market add-on</h3><div class="price">$50 per month</div><p>A custom paragraph on the local market in each article.</p></div>
+</div>
+<p class="sample">For a sense of the style, see <a href="@smp-six-ways-bad-credit-can-ruin-your-life@">Six Ways Bad Credit Can Ruin Your Life</a> and the other samples on the <a href="@ind-mortgage@">mortgage page</a>.</p>
+''' + cta("Reserve your city", "Send the city and the newsletter platform you use, and I will confirm availability.", "Reserve your city")
+
+
 for a in SAMPLES_ALL:
     k = "smp-" + a["slug"]
     back = _IND[a["back"]]
@@ -599,6 +625,10 @@ for a in SAMPLES_ALL:
     body += cta("To discuss a project", "Share the news, the audience and the timing, and I will reply with a scope and a price.")
     write(PAGES[k], page(k, f'{a["title"]} | Sample | Copacetic Marketing', f'A writing sample: {a["title"]}.',
                          header_block("Sample", a["title"], ""), body, og_image=a["img"]))
+
+write("monthly-content", page("monthly", "Monthly Newsletter and Blog Articles for Loan Officers and Agents | Copacetic Marketing",
+                              "One ready-to-send article each month for the newsletter, blog and LinkedIn of a loan officer or real estate agent, exclusive to one subscriber per city.",
+                              MONTHLY_TOP, MONTHLY, og_image="keys"))
 
 for d in INDUSTRIES:
     write(PAGES[d["key"]], page(d["key"], d["title"], d["desc"],

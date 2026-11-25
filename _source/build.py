@@ -581,7 +581,7 @@ for a in RC_SAMPLES:
     body += cta("To discuss a project", "Share the news, the audience and the timing, and I will reply with a scope and a price.")
     pg = page(k, f'{a["title"]} | Sample | Copacetic Marketing', "A writing sample for a retirement community.",
               header_block("Sample", a["title"], ""), body, og_image="seniors")
-    write(PAGES[k], pg.replace('<link rel="canonical"', '<meta name="robots" content="noindex">\n  <link rel="canonical"', 1))
+    write(PAGES[k], pg)
 
 for d in INDUSTRIES:
     write(PAGES[d["key"]], page(d["key"], d["title"], d["desc"],
@@ -625,7 +625,7 @@ if not PREVIEW:
                 "Meta-ExternalAgent", "DuckAssistBot", "cohere-ai", "Bytespider"]
         f.write("".join(f"User-agent: {b}\nDisallow: /\n\n" for b in bots) +
                 f"User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n")
-    allp = [v for k, v in PAGES.items() if not k.startswith("smp-")] + ["blog/" + p["slug"] for p in POSTS]
+    allp = list(PAGES.values()) + ["blog/" + p["slug"] for p in POSTS]
     urls = "".join(f"  <url><loc>{DOMAIN}/{p + '/' if p else ''}</loc></url>\n" for p in allp)
     with open(f"{OUT}/sitemap.xml", "w") as f:
         f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')

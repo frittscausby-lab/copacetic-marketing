@@ -4,6 +4,7 @@ python3 build.py          -> dist/     (deploy build, clean addresses, for GitHu
 python3 build.py preview  -> preview/  (links point at index.html so pages open anywhere)
 """
 import json, os, re, shutil, sys, html, hashlib
+from industries import INDUSTRIES, NEW_POSTS, NEW_IMG
 
 PREVIEW = len(sys.argv) > 1 and sys.argv[1] == "preview"
 OUT = "preview" if PREVIEW else "dist"
@@ -15,10 +16,12 @@ PIN = "https://thepinnacle.ink/articles"
 
 CSS_V = hashlib.md5(open("assets/style.css", "rb").read()).hexdigest()[:8]
 PAGES = {"home": "", "services": "services-1", "press": "press-release-services", "ghost": "ghostwriting",
-         "c2c": "conference-to-content", "about": "about", "blog": "blog"}
+         "c2c": "conference-to-content", "about": "about", "blog": "blog", "industries": "industries"}
+PAGES.update({d["key"]: "industries/" + d["slug"] for d in INDUSTRIES})
+IND_MENU = [(d["key"], d["label"]) for d in INDUSTRIES]
 # Services menu: items with their own page link to it; the rest are listed without a link for now
 MENU = [("press", "Press Releases"), ("ghost", "Ghostwriting"), ("c2c", "Conference to Content"),
-        (None, "Real Estate and Listing Writing"), (None, "Sponsored Content"), (None, "Newsletters"),
+        ("ind-realestate", "Real Estate and Listing Writing"), (None, "Sponsored Content"), (None, "Newsletters"),
         (None, "Video Scripts"), (None, "Reputation Management"), (None, "Website Building")]
 NAV = [("about", "About"), ("blog", "Blog")]
 
@@ -58,6 +61,7 @@ IMG = {
     "news": ("photo-1773158742082-6f26389f7492", "Viva Reella", "vivareella", "Phone, laptop and coffee on a desk"),
     "web": ("photo-1522542550221-31fd19575a2d", "Hal Gatewood", "halacious", "Sketches of website layouts"),
 }
+IMG.update(NEW_IMG)
 UTM = "utm_source=copacetic_marketing&utm_medium=referral"
 
 
@@ -91,10 +95,10 @@ def header_block(tag, h1, subtitle):
             f'<h1>{h1}</h1>{sub}</div></div>')
 
 
-def menu_items(key, here):
+def menu_items(key, here, items=None):
     return "".join(
         (f'<li><a href="{link(k, here)}"{" aria-current=page" if k == key else ""}>{label}</a></li>' if k
-         else f'<li><span>{label}</span></li>') for k, label in MENU)
+         else f'<li><span>{label}</span></li>') for k, label in (items or MENU))
 
 
 def sidebar(key, here):
@@ -117,6 +121,8 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
     on_svc = key in ("services", "press", "ghost", "c2c")
     nav = (f'<div class="dd"><a href="{link("services", here)}" class="dd-top"{" aria-current=page" if on_svc else ""} aria-haspopup="true">Services <span class="caret" aria-hidden="true">&#9662;</span></a>'
            f'<ul class="dd-menu">{menu_items(key, here)}</ul></div>' +
+           f'<div class="dd"><a href="{link("industries", here)}" class="dd-top"{" aria-current=page" if key.startswith("ind") else ""} aria-haspopup="true">Industries <span class="caret" aria-hidden="true">&#9662;</span></a>'
+           f'<ul class="dd-menu">{menu_items(key, here, [("industries", "All industries")] + IND_MENU)}</ul></div>' +
            "".join(f'<a href="{link(k, here)}"{" aria-current=page" if k == key else ""}>{lab}</a>' for k, lab in NAV))
     main = main.replace("@CONTACT@", contact_inline()).replace("@MAIL@", mail())
     for k in PAGES:
@@ -176,6 +182,7 @@ def page(key, title, desc, top, main, here=None, og_image=None, schema=None):
       <div class="footer-col">
         <h4>Services</h4>
         {svc_links}
+        <a href="{link('industries', here)}">Industries</a>
         <a href="{link('blog', here)}">Blog</a>
         <a href="{link('about', here)}">About</a>
       </div>
@@ -276,11 +283,11 @@ SERVICES = figure("arch", 1600, 700, True) + '''
 
   <div class="svc" id="attorneys"><div><h3>Ghostwriting for attorneys</h3></div><div>
     <p>Blog posts, client alerts and bylined articles with insights and guidance from the perspective of the attorney, written from a short interview and reviewed by the attorney before publishing. Each piece is customized to the voice of the firm and the attorney. The content draws from my experience writing legal content since 2021. The attorney spends about 30 minutes in conversation and reviews the article before it is published.</p>
-    <p><a class="more" href="@ghost@">Ghostwriting services</a></p></div></div>
+    <p><a class="more" href="@ghost@">Ghostwriting services</a> &nbsp;&nbsp; <a class="more" href="@ind-law@">For law firms</a></p></div></div>
 
   <div class="svc" id="real-estate-ghostwriting"><div><h3>Ghostwriting for real estate professionals</h3></div><div>
     <p>Market updates, newsletters, agent bios, LinkedIn posts and area guides built on the insights and knowledge of the agent, leveraging the experience of a writer who has worked in real estate since 2005 in sales, marketing, administration and copywriting. Clients and prospects hear from the agent on a regular schedule, even in the busiest months.</p>
-    <p><a class="more" href="@ghost@">Ghostwriting services</a></p></div></div>
+    <p><a class="more" href="@ghost@">Ghostwriting services</a> &nbsp;&nbsp; <a class="more" href="@ind-realestate@">For real estate</a></p></div></div>
 
   <div class="svc" id="linkedin"><div><h3>Executive and LinkedIn ghostwriting</h3></div><div>
     <p>Ongoing posts and articles for owners and subject matter experts who want a steady presence but do not have the time to write every post. Nothing is posted without the approval of the client. An optional add-on covers posting and engagement support, with each reply drafted for the approval of the client before posting.</p></div></div>
@@ -338,10 +345,10 @@ PRESS = '''
   <li>Once the release is approved, I build the media list and send the pitches.</li>
   <li>I follow up and deliver the report.</li>
 </ol>
-<p class="note">Turnaround is usually 2 to 4 business days, with four rounds of revisions included.</p>
+<p class="note">Turnaround is usually 2 to 4 business days, with up to four edits included.</p>
 
 <h2>Why a press release?</h2>
-<p>A law firm announcing a hire, a win or a new practice area may benefit from a press release. Real estate agents and brokerages use press releases to mark a record sale, a milestone or a new listing.</p>
+<p>A law firm announcing a hire, a win or a new practice area may benefit from a press release. Real estate agents and brokerages use press releases to mark a record sale, a milestone or a new listing. Ideas for specific fields are collected on the <a href="@industries@">Industries</a> pages.</p>
 <p>Charity fundraisers can be particularly effective, as many editors like to publish feel-good stories. Product launches, new locations, charity sponsorships and client appreciation events are also valid reasons for creating a press release. The service can benefit any organization with news and little time.</p>
 <p class="sample">For an example of charity coverage, see the <a href="''' + PIN + '''/love-is-bald-charity-spotlight-supporting-cancer-warriors-in-north-carolina.html">Love is Bald charity spotlight</a> on The Pinnacle and <a href="''' + FC + '''/first-tee-charity-spotlight">First Tee Brings Character to the Fore</a> on frittscausby.com.</p>
 <p>Press releases are a valuable form of engagement, and in many cases a published release functions as an advertisement that reaches a more informed audience than a paid ad does. A press release also typically costs less than a single business-card-size print ad in a local or trade publication, where rates often start near $100 per insertion, and the release says far more about the business.</p>
@@ -369,11 +376,13 @@ GHOST = '''
 <div class="svc-list">
   <div class="svc" id="attorneys"><div><h3>For attorneys</h3></div><div>
     <p>Blog posts, client alerts, bylined articles and practice area pages from the perspective of the attorney, with answers to the questions clients ask. I have written legal content for Ward and Smith, P.A. since 2021. I also attend firm seminars and conferences in person and turn the sessions into articles. Professional rules vary by state, so the attorney should confirm that the final piece meets the applicable obligations. Anyone can ask a chatbot for complicated legal jargon that will put readers to sleep. I write articles that are accurate, engaging and conversational.</p>
+    <p><a class="more" href="@ind-law@">Ghostwriting and press releases for law firms</a></p>
     <p><a class="more" href="@post:does-a-legal-writer-need-a-law-degree@">Related: Does a Legal Writer Need a Law Degree?</a></p></div></div>
 
   <div class="svc" id="real-estate"><div><h3>For real estate professionals</h3></div><div>
     <p>Market updates, newsletters, listing stories, agent bios and local guides that sound like a person and not a template. Writing listings and PR for agents since 2008 has taught me what buyers respond to and what an effective bio needs to communicate.</p>
     <p>A sample of my real estate writing published in Wrightsville Beach Magazine is available on <a href="''' + FC + '''/coastal-home">frittscausby.com</a>.</p>
+    <p><a class="more" href="@ind-realestate@">Writing for real estate agents, teams and brokerages</a></p>
     <p><a class="more" href="@post:why-top-agents-hire-a-real-estate-writer@">Related: Why Top Agents Hire a Real Estate Writer</a></p>
     <p><a class="more" href="''' + PIN + '''/villa-maggio-frank-sinatra-last-intact-estate.html">On The Pinnacle: Villa Maggio, Frank Sinatra&rsquo;s Last Intact Estate</a></p></div></div>
 
@@ -386,7 +395,7 @@ GHOST = '''
 <ol class="steps">
   <li>I research the client and the business before the call, so the 20 to 30 minute conversation is informed and flows naturally instead of following a list of questions. The call is recorded with permission.</li>
   <li>I research additional sources, create a draft from the perspective of the client and send it for review.</li>
-  <li>The client reviews and edits, and the piece is finalized through four rounds of revisions.</li>
+  <li>The client reviews and edits, and the piece is finalized with up to four edits.</li>
   <li>I deliver a version ready to publish, with a headline and, if desired, a search-friendly summary.</li>
 </ol>
 <p class="note">Turnaround is typically one to two weeks from interview to final.</p>
@@ -399,7 +408,7 @@ GHOST = '''
 
 <h2>Questions</h2>
 <div class="faq">
-  <details><summary>Will it sound like me?</summary><p>That is the purpose of the interview. I write from the conversation, using specific words and examples, then refine the phrasing through four rounds of revisions.</p></details>
+  <details><summary>Will it sound like me?</summary><p>That is the purpose of the interview. I write from the conversation, using specific words and examples, then refine the phrasing with up to four edits.</p></details>
   <details><summary>Can a ghostwriter be used in a given profession?</summary><p>In most cases, yes, with review and appropriate credit, but the rules vary. This is not legal advice, and professional rules should be checked.</p></details>
 </div>
 ''' + cta("To get started", "Tell me about the expertise you want to share, and I will suggest a schedule and a format.")
@@ -467,6 +476,14 @@ SPECS = [
 
 # ---------------------------------------------------------------- POSTS + sample links
 POSTS = json.load(open("posts.json"))
+_LAND = {d["key"]: d for d in INDUSTRIES}
+for np_ in NEW_POSTS:
+    body = "".join(f"<p>{t}</p>" for t in np_["paras"])
+    body += f'<p><a class="more" href="@{np_["land"]}@">{_LAND[np_["land"]]["h1"]}</a></p>'
+    if np_.get("extra"):
+        body += f'<p><a class="more" href="@{np_["extra"][0]}@">{np_["extra"][1]}</a></p>'
+    POSTS.append({"slug": np_["slug"], "title": np_["title"], "key": np_["key"], "html": body, "excerpt": np_["paras"][0]})
+POST_TITLES = {p["slug"]: p["title"] for p in POSTS}
 SAMPLES = {
     "why-top-agents-hire-a-real-estate-writer": (6, f'For examples of narratives about architecturally significant homes, see the <a href="{PIN}/landmark-ray-kappe-house-up-for-sale.html">Ray Kappe House</a> and <a href="{PIN}/villa-maggio-frank-sinatra-last-intact-estate.html">Villa Maggio, the last intact estate of Frank Sinatra</a> on The Pinnacle, and <a href="{FC}/coastal-home">a coastal home feature</a> on frittscausby.com.'),
     "real-estate-articles-in-marketing": (4, f'For a sample of a home feature written for a local magazine, see <a href="{FC}/coastal-home">Every Detail Tells a Story</a> on frittscausby.com. For an article that compares real estate with other investments, see <a href="{PIN}/stocks-vs-real-estate.html">Stocks vs. Real Estate</a> on The Pinnacle.'),
@@ -527,6 +544,37 @@ write("", page("home", "Content Writing and Ghostwriting | Copacetic Marketing",
                HOME_TOP, HOME.replace("@BLOGCARDS@", cards(POSTS[:4], "")).replace("@HOMESVC@", home_services("")), og_image="arch"))
 for key, title, desc, top, main, og in SPECS:
     write(PAGES[key], page(key, title, desc, top, main, og_image=og))
+
+IND_TOP = header_block("Industries", "Industries", "Every field has its own news, its own audiences and its own rules. These pages cover the events that tend to earn coverage, the services that fit and the rules that apply.")
+IND = '<div class="svc-list">' + "".join(
+    f'<a class="svc" href="@{d["key"]}@"><div><h3>{d["label"]}</h3></div><p>{d["opening"]}</p></a>' for d in INDUSTRIES) + "</div>" + \
+    cta("Not sure where a project fits?", "Describe the news or the goal, and I will recommend an approach.")
+write("industries", page("industries", "Industries | Copacetic Marketing",
+                         "Press releases, ghostwriting and content for medical practices, builders, nonprofits, financial advisors, associations, resorts, retirement communities, real estate and law firms.",
+                         IND_TOP, IND, og_image="press"))
+
+
+def industry_main(d):
+    out = [figure(d["img"], 1600, 700, True), f'<p class="lead-in">{d["opening"]}</p>', "<h2>News-worthy events</h2>"]
+    if d["events"]:
+        out.append("<ul>" + "".join(f"<li>{e}</li>" for e in d["events"]) + "</ul>")
+    out += [f"<p>{p}</p>" for p in d["events_p"]]
+    out.append("<h2>What is included</h2>")
+    out += [f"<p>{p}</p>" for p in d["included"]]
+    out.append(f'<p><a class="more" href="@{d["service"][0]}@">{d["service"][1]}</a></p>')
+    out += ["<h2>Rules that apply</h2>", f'<p class="note">{d["rules"]}</p>']
+    if d["samples"]:
+        out.append("<h2>Samples</h2>")
+        out += [f'<p class="sample">{t}</p>' for t in d["samples"]]
+    if d["related"]:
+        out.append(f'<p><a class="more" href="@post:{d["related"]}@">Related: {POST_TITLES[d["related"]]}</a></p>')
+    out.append(cta("To discuss a project", "Share the news, the audience and the timing, and I will reply with a scope and a price."))
+    return "\n".join(out)
+
+
+for d in INDUSTRIES:
+    write(PAGES[d["key"]], page(d["key"], d["title"], d["desc"],
+                                header_block("Industries", d["h1"], ""), industry_main(d), og_image=d["img"]))
 
 BLOG_TOP = header_block("Blog", "Notes on writing, PR and content", "Practical articles on press releases, ghostwriting, conference content and real estate marketing.")
 BLOG = '@CARDS@' + '''

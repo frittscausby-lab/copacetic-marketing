@@ -545,7 +545,7 @@ write("", page("home", "Content Writing and Ghostwriting | Copacetic Marketing",
 for key, title, desc, top, main, og in SPECS:
     write(PAGES[key], page(key, title, desc, top, main, og_image=og))
 
-IND_TOP = header_block("Industries", "Industries", "Every field has its own news, its own audiences and its own rules. These pages cover the events that tend to earn coverage, the services that fit and the rules that apply.")
+IND_TOP = header_block("Industries", "Industries", "Every industry needs content development and distribution. The pages cover the events that earn coverage, the services that fit and the rules that apply.")
 IND = '<div class="svc-list">' + "".join(
     f'<a class="svc" href="@{d["key"]}@"><div><h3>{d["label"]}</h3></div><p>{d["opening"]}</p></a>' for d in INDUSTRIES) + "</div>" + \
     cta("Not sure where a project fits?", "Describe the news or the goal, and I will recommend an approach.")
